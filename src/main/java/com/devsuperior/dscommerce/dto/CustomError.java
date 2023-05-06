@@ -2,6 +2,8 @@ package com.devsuperior.dscommerce.dto;
 
 import java.time.Instant;
 
+import org.springframework.validation.FieldError;
+
 public class CustomError {
 
 	private Instant timestamp;
@@ -30,5 +32,9 @@ public class CustomError {
 
 	public String getPath() {
 		return path;
+	}
+
+	public FieldError[] getFieldErrors() {
+		return null;
 	}
 }
