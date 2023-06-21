@@ -2,6 +2,8 @@ package com.devsuperior.dscommerce.controllers.handlers;
 
 import java.time.Instant;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,10 +13,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.devsuperior.dscommerce.dto.CustomError;
 import com.devsuperior.dscommerce.dto.ValidationError;
 import com.devsuperior.dscommerce.services.exceptions.DatabaseException;
+import com.devsuperior.dscommerce.services.exceptions.ForbiddenException;
 import com.devsuperior.dscommerce.services.exceptions.MethodArgumentNotValidException;
 import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
-
-import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -40,6 +41,13 @@ public class ControllerExceptionHandler {
 		for (FieldError f : ((CustomError) e.getBindingResult()).getFieldErrors()) {
 			err.addError(f.getField(), f.getDefaultMessage());
 		}
+		return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(ForbiddenException.class)
+	public ResponseEntity<CustomError> forbidden(ForbiddenException e, HttpServletRequest request) {
+		HttpStatus status = HttpStatus.FORBIDDEN;
+		CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
 }
