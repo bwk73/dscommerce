@@ -54,7 +54,7 @@ public class ProductController {
 				path("/{id}").
 				buildAndExpand(dto.getId()).
 				toUri();
-;		return ResponseEntity.created(uri).body(dto);
+		return ResponseEntity.created(uri).body(dto);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
